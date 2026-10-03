@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="FreeSpeed: Training-Free Speed Control for Generative Policies. A training-free module that post-processes action chunks from pretrained policies for online speed control.">
+<title>FreeSpeed · Training-Free Speed Control</title>
+<link rel="stylesheet" href="static/css/site.css?v=20261003l">
+<script defer src="static/data/project.js?v=20261003b"></script>
+<script defer src="static/js/individual-players.js?v=20260924-english-v3"></script>
+<script defer src="static/js/page.js?v=20261003"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topnav">
+  <div class="container">
+    <a class="brand" href="#top"><span>Free</span>Speed</a>
+    <nav aria-label="Sections">
+      <a href="#video">Video</a>
+      <a href="#overview">Overview</a>
+      <a href="#method">Method</a>
+      <a href="#experiments">Experiments</a>
+      <a href="#rollouts">Rollouts</a>
+      <a href="#analysis">Analysis</a>
+      <a href="#bibtex">BibTeX</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="container">
+    <h1><span class="name">FreeSpeed</span><span class="sub">Training-Free Speed Control for Generative Policies</span></h1>
+    <ul class="authors" aria-label="Authors">
+      <li><a href="https://openreview.net/profile?id=~Yuxuan_Hu14">Yuxuan Hu</a><sup>1,*</sup></li>
+      <li><a href="https://openreview.net/profile?id=~Shilin_Shan1">Shilin Shan</a><sup>1,*</sup></li>
+      <li><a href="https://openreview.net/profile?id=~Qiheng_Wang3">Qiheng Wang</a><sup>1</sup></li>
+      <li><a href="https://openreview.net/profile?id=~Jinghan_Yang2">Jinghan Yang</a><sup>1</sup></li>
+      <li><a href="https://openreview.net/profile?id=~Junqiao_Fan1">Junqiao Fan</a><sup>1</sup></li>
+      <li><a href="https://openreview.net/profile?id=~Hao_Wan4">Hao Wan</a><sup>2</sup></li>
+      <li><a href="https://openreview.net/profile?id=~Jianfei_Yang4">Jianfei Yang</a><sup>1,†</sup></li>
+    </ul>
+    <p class="affiliations"><span><sup>1</sup>MARS Lab, Nanyang Technological University</span><span><sup>2</sup>ROKAE Robotics</span></p>
+    <p class="notes"><sup>*</sup>Equal contribution &nbsp;·&nbsp; <sup>†</sup>Corresponding author</p>
+    <div class="links">
+      <span class="btn soon" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Paper <small>soon</small></span>
+      <span class="btn soon" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20"/></svg>arXiv <small>soon</small></span>
+      <span class="btn soon" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Code <small>soon</small></span>
+      <a class="btn" href="#video"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Video</a>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+
+<!-- Teaser -->
+<section class="section" aria-label="Teaser">
+  <div class="container">
+    <div class="card">
+      <figure class="fig" style="--w:840px">
+        <a href="static/images/paper/teaser.webp" target="_blank" rel="noopener" title="Open full-size figure"><img src="static/images/paper/teaser.webp" width="2400" height="1237" alt="(a) Demonstration retiming compared with FreeSpeed's test-time resampling and rescaling of predicted action chunks. (b) Success rates of FreeSpeed and vanilla resampling on three policies under speedup and slowdown commands." decoding="async"></a>
+        <figcaption><b>FreeSpeed modulates the execution speed of a frozen policy.</b> (a) Methods based on demonstration retiming resample demonstrations and train or fine-tune the policy, while FreeSpeed resamples and rescales predicted action chunks at test time. (b) Success rates of FreeSpeed and vanilla resampling on three policies under speedup and slowdown commands.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- Video -->
+<section class="section" id="video" aria-label="Video">
+  <div class="container">
+    <div class="card">
+      <div class="player-frame">
+        <video id="overview-video" controls playsinline muted preload="metadata" poster="static/videos/supplementary/freespeed-overview.jpg" aria-label="FreeSpeed real-robot video">
+          <source src="static/videos/supplementary/freespeed-overview.mp4" type="video/mp4">
+        </video>
+      </div>
+      <ol class="chapters" aria-label="Video chapters">
+        <li><button type="button" data-t="4"><time>0:04</time>Tennis in Can · 4×</button></li>
+        <li><button type="button" data-t="30"><time>0:30</time>Rate varies during execution</button></li>
+        <li><button type="button" data-t="72"><time>1:12</time>Stack Cube · 4×</button></li>
+        <li><button type="button" data-t="95"><time>1:35</time>Pour Almond · 4×</button></li>
+        <li><button type="button" data-t="128"><time>2:08</time>Peach on Plate · 4×</button></li>
+        <li><button type="button" data-t="148"><time>2:28</time>Peach on Plate · 0.2×</button></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Overview -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="section-head"><h2>Overview</h2></div>
+    <div class="stack">
+      <div class="card">
+        <span class="kicker">Abstract</span>
+        <p>Online control of execution speed is essential for deploying robot policies in real-world scenarios, as robots may need to speed up under time constraints or slow down to facilitate human interaction and improve safety. However, imitation-learned policies inherit the execution speed of their demonstrations, and test-time speed modification can introduce unrecoverable out-of-distribution observations, reducing task success. We introduce <strong>FreeSpeed</strong>, a training-free module that post-processes action chunks from pretrained policies. FreeSpeed resamples each predicted chunk at the requested rate, then uses directional inconsistency between adjacent actions as the primary signal for rescaling. This signal adaptively determines how closely the execution speed can approach the requested speed, allowing flexible speed adjustment within the evaluated limits without compromising task success. Across three policy families and 50 simulated tasks, FreeSpeed supports online speed changes, with realized execution rates spanning 0.22× to 2.53× among settings that preserve per-task success. Across four real-world manipulation tasks, FreeSpeed achieves an average success rate of 94.0%, matching the frozen policy's 93.8%, while realizing execution rates from 0.38× to 1.97×.</p>
+      </div>
+      <div class="grid-4">
+        <div class="card stat"><span class="value">3 policies</span><span class="label">Frozen π<sub>0.5</sub>, Fast-WAM, and task-specific Flow Matching</span></div>
+        <div class="card stat"><span class="value">50 + 4 tasks</span><span class="label">LIBERO simulation tasks and real-robot tasks</span></div>
+        <div class="card stat"><span class="value">0.22×–2.53×</span><span class="label">Realized rates in simulation among settings that preserve per-task success</span></div>
+        <div class="card stat"><span class="value">94.0%</span><span class="label">Real-robot mean success over six commands, vs. 93.8% for the frozen policy</span></div>
+      </div>
+      <div class="card">
+        <span class="kicker">Related work</span>
+        <h3>Speed-control capabilities of the compared methods</h3>
+        <div class="table-wrap">
+          <table class="cap-table">
+            <thead><tr><th scope="col" style="text-align:left">Method</th><th scope="col">No rate training</th><th scope="col">Unmodified demos</th><th scope="col">Unchanged controller</th><th scope="col">User-set rate</th><th scope="col">Slow-motion</th><th scope="col">In-episode rate</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">SuP</th><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td></tr>
+              <tr><th scope="row">SpeedTuning</th><td class="no">○</td><td>●</td><td>●</td><td class="no">○</td><td class="no">○</td><td class="no">○</td></tr>
+              <tr><th scope="row">TempoVLA</th><td class="no">○</td><td class="no">○</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+              <tr><th scope="row">SAIL</th><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td></tr>
+              <tr><th scope="row">RACE</th><td>●</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td></tr>
+              <tr><th scope="row">DemoSpeedup</th><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td><td class="no">○</td></tr>
+              <tr><th scope="row">AutoSpeed</th><td class="no">○</td><td>●</td><td class="no">○</td><td class="no">○</td><td>●</td><td class="no">○</td></tr>
+              <tr><th scope="row">SpeedAug</th><td class="no">○</td><td class="no">○</td><td>●</td><td class="no">○</td><td class="no">○</td><td class="no">○</td></tr>
+              <tr class="ours-row"><th scope="row">FreeSpeed (ours)</th><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caption">A filled dot indicates that the capability is demonstrated in the corresponding paper; an open dot indicates that it is not demonstrated.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Method -->
+<section class="section" id="method">
+  <div class="container">
+    <div class="section-head"><h2>Method</h2></div>
+    <div class="stack">
+      <div class="card">
+        <figure class="fig" style="--w:880px">
+          <a href="static/images/paper/method.webp" target="_blank" rel="noopener" title="Open full-size figure"><img src="static/images/paper/method.webp" width="2400" height="821" alt="FreeSpeed at one replan: the frozen policy predicts an action chunk; translation increments give a cosine inconsistency score; the rate command determines temporal resampling; together they set the rescaling factor." loading="lazy" decoding="async"></a>
+          <figcaption><b>FreeSpeed at one replan.</b> The frozen policy predicts an action chunk. Its translation increments provide a cosine inconsistency score, and the rate command determines temporal resampling. Together, the score and command determine the factor used to rescale the resampled translation and rotation increments.</figcaption>
+        </figure>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3><span class="step-num">1</span>Resample</h3>
+          <p>At each replan, FreeSpeed resamples the predicted chunk of incremental (delta) actions on a temporal grid with stride <span class="m">ρ<sub>t</sub></span>. Acceleration skips predicted actions, while deceleration splits each action into sub-actions that preserve its direction.</p>
+        </div>
+        <div class="card">
+          <h3><span class="step-num">2</span>Measure inconsistency</h3>
+          <p>Cosine inconsistency measures the change in direction between consecutive translation increments. The inconsistency of a chunk, <span class="m">I</span><sub>cos</sub>, is the maximum over its <span class="m">H</span>−1 adjacent increment pairs.</p>
+        </div>
+        <div class="card">
+          <h3><span class="step-num">3</span>Rescale</h3>
+          <div class="equation" role="math" aria-label="f t equals f c plus the quantity f s minus f c, times exp of minus lambda times I cos"><var>f</var><sub>t</sub> = <var>f</var><sub>c</sub> + (<var>f</var><sub>s</sub> − <var>f</var><sub>c</sub>) exp(−λ<var>I</var><sub>cos</sub>)</div>
+          <p>The factor scales translation and rotation increments; gripper commands are unchanged. It equals <span class="m">f</span><sub>s</sub> when <span class="m">I</span><sub>cos</sub> is zero and approaches <span class="m">f</span><sub>c</sub> as <span class="m">I</span><sub>cos</sub> increases.</p>
+        </div>
+      </div>
+      <div class="card">
+        <span class="kicker">Signal</span>
+        <h3>Cosine inconsistency tracks the task phase</h3>
+        <p>Segments with high <span class="m">I</span><sub>cos</sub> correspond to decisive task phases, identified in these examples as grasping and placement in pick-and-place tasks. Under acceleration, the factor is large when the chunk follows a straight trajectory and decreases toward 1.0 as CI increases. Under deceleration, the factor is close to the commanded stride when CI is small and increases as CI grows. In both cases, increasing CI brings the executed step lengths closer to those originally predicted by the policy.</p>
+        <figure class="fig" style="--w:760px">
+          <a href="static/images/paper/signal-response.webp" target="_blank" rel="noopener" title="Open full-size figure"><img src="static/images/paper/signal-response.webp" width="2400" height="645" alt="(a) Cosine inconsistency along human demonstrations of five LIBERO-90 tasks, with peaks during grasping and placement. (b) The mapping from cosine inconsistency to the rescaling factor under the 2× and 0.5× commands." loading="lazy" decoding="async"></a>
+          <figcaption><b>The signal and the response.</b> (a) Cosine inconsistency along human demonstrations of five LIBERO-90 tasks, with peaks during grasping and placement. (b) The mapping from cosine inconsistency to the rescaling factor under the 2× and 0.5× commands.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experiments -->
+<section class="section" id="experiments">
+  <div class="container">
+    <div class="section-head"><h2>Experiments</h2></div>
+    <div class="stack">
+      <div class="card">
+        <figure class="fig" style="--w:880px">
+          <a href="static/images/paper/environments.webp" target="_blank" rel="noopener" title="Open full-size figure"><img src="static/images/paper/environments.webp" width="2400" height="705" alt="Evaluation environments: 50 simulation tasks from LIBERO and four real-robot tasks." loading="lazy" decoding="async"></a>
+          <figcaption><b>Evaluation environments.</b> 50 simulation tasks from LIBERO and four real-robot tasks.</figcaption>
+        </figure>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="kicker">Protocol</span>
+          <h3>Policies and tasks</h3>
+          <p>We evaluate three policy architectures: VLA, WAM, and task-specific flow matching. Checkpoints of π<sub>0.5</sub> and Fast-WAM were pretrained on 40 tasks spanning LIBERO-Spatial, Object, Goal, and Long and are kept frozen. Task-specific flow-matching policies are trained on 10 LIBERO-90 tasks and 4 real-robot tasks. On the real robot, a Rokae Helios series humanoid executes the action at 30 Hz.</p>
+        </div>
+        <div class="card">
+          <span class="kicker">Baselines</span>
+          <h3>Compared execution rules</h3>
+          <p><strong>Vanilla resampling</strong> sums the skipped action increments into the retained action. <strong>w/o CR</strong> combines resampling with naive rescaling by the commanded stride, <span class="m">f<sub>t</sub></span> = <span class="m">ρ<sub>t</sub></span>, as an ablation without CI-based rescaling. The unchanged 1× policy is the reference. Under deceleration, vanilla resampling and w/o CR are equivalent, so only w/o CR is reported.</p>
+        </div>
+      </div>
+      <div class="card">
+        <span class="kicker">Simulation</span>
+        <h3>π<sub>0.5</sub> and Fast-WAM on four LIBERO suites</h3>
+        <p>At a 2× command, FreeSpeed maintains the reference success rates for both policies, whereas vanilla resampling reduces success by 9.2 and 12.7 percentage points and w/o CR by 8.0 and 12.3 percentage points, respectively. Under deceleration, FreeSpeed outperforms w/o CR at every slowdown stride on both policies. Across individual tasks from both policies, the realized rates that preserve each task's own 1× success rate range from 0.22× to 2.53×.</p>
+        <figure class="fig" style="--w:720px">
+          <a href="static/images/paper/simulation.webp" target="_blank" rel="noopener" title="Open full-size figure"><img src="static/images/paper/simulation.webp" width="2400" height="1267" alt="Success rates and realized execution rates of π0.5 and Fast-WAM on the four LIBERO suites under speedup and slowdown commands." loading="lazy" decoding="async"></a>
+          <figcaption><b>Simulation comparison for π<sub>0.5</sub> and Fast-WAM.</b> Bars show success rates on the left axes, and triangular markers show realized execution rates on the right axes. The rate axes are inverted in the slowdown panels.</figcaption>
+        </figure>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="kicker">Simulation</span>
+          <h3>Flow Matching on 10 LIBERO-90 tasks</h3>
+          <p>Across the four non-reference strides, FreeSpeed maintains or exceeds the 1× reference's mean success rate of 89%, with realized rates from 0.348× to 1.431× across individual tasks.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr class="group"><th></th><th colspan="3">Success (%)</th><th colspan="3">Rate (×)</th></tr>
+                <tr><th scope="col" style="text-align:left">Cmd</th><th scope="col">w/o CR</th><th scope="col">Vanilla</th><th scope="col" class="ours">Ours</th><th scope="col">w/o CR</th><th scope="col">Vanilla</th><th scope="col" class="ours">Ours</th></tr>
+              </thead>
+              <tbody>
+                <tr class="ref-row"><th scope="row">1× ref.</th><td colspan="3">89</td><td colspan="3">1.000</td></tr>
+                <tr><th scope="row">1.5×</th><td>73</td><td>80</td><td class="ours">90</td><td>1.242</td><td>1.280</td><td class="ours">1.221</td></tr>
+                <tr><th scope="row">2×</th><td>46</td><td>61</td><td class="ours">89</td><td>1.435</td><td>1.483</td><td class="ours">1.353</td></tr>
+                <tr><th scope="row">0.5×</th><td>84</td><td class="dash">—</td><td class="ours">90</td><td>0.570</td><td class="dash">—</td><td class="ours">0.626</td></tr>
+                <tr><th scope="row">0.3×</th><td>74</td><td class="dash">—</td><td class="ours">90</td><td>0.328</td><td class="dash">—</td><td class="ours">0.402</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="caption">Mean over 10 tasks, 50 rollouts per task. Rate averages per-task realized rates, each computed over trials in which both the evaluated method and the reference succeed.</p>
+        </div>
+        <div class="card">
+          <span class="kicker">Real robot</span>
+          <h3>Four real-robot tasks</h3>
+          <p>Averaged over the six non-reference strides, FreeSpeed achieves 94.0% mean success, compared with the reference's 93.8%, with realized execution rates from 0.38× to 1.97× across individual tasks.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr class="group"><th></th><th colspan="3">Success (%)</th><th colspan="3">Rate (×)</th></tr>
+                <tr><th scope="col" style="text-align:left">Cmd</th><th scope="col">w/o CR</th><th scope="col">Vanilla</th><th scope="col" class="ours">Ours</th><th scope="col">w/o CR</th><th scope="col">Vanilla</th><th scope="col" class="ours">Ours</th></tr>
+              </thead>
+              <tbody>
+                <tr class="ref-row"><th scope="row">1× ref.</th><td colspan="3">93.8</td><td colspan="3">1.00</td></tr>
+                <tr><th scope="row">2×</th><td>72.5</td><td>77.5</td><td class="ours">97.5</td><td>1.66</td><td>1.69</td><td class="ours">1.44</td></tr>
+                <tr><th scope="row">3×</th><td>37.5</td><td>38.8</td><td class="ours">95.0</td><td>1.86</td><td>1.93</td><td class="ours">1.62</td></tr>
+                <tr><th scope="row">4×</th><td>25.0</td><td>11.2</td><td class="ours">91.2</td><td>1.93</td><td>2.18</td><td class="ours">1.75</td></tr>
+                <tr><th scope="row">0.5×</th><td>82.5</td><td class="dash">—</td><td class="ours">96.2</td><td>0.57</td><td class="dash">—</td><td class="ours">0.68</td></tr>
+                <tr><th scope="row">0.3×</th><td>66.2</td><td class="dash">—</td><td class="ours">93.8</td><td>0.37</td><td class="dash">—</td><td class="ours">0.47</td></tr>
+                <tr><th scope="row">0.2×</th><td>55.0</td><td class="dash">—</td><td class="ours">90.0</td><td>0.25</td><td class="dash">—</td><td class="ours">0.40</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="caption">Mean over Peach on Plate, Tennis in Can, Stack Cube, and Pour Almond.</p>
+        </div>
+      </div>
+      <div class="card">
+        <span class="kicker">Varying rate</span>
+        <h3>Rate that varies during execution</h3>
+        <p>FreeSpeed maintains task success under stride randomization across policy inferences and factor randomization within its bounds. (A) A new stride is sampled from the full command set at each replan. (B) The stride remains fixed, while the rescaling factor is sampled between <span class="m">f</span><sub>c</sub> and <span class="m">f<sub>t</sub></span>; success rates remain within 2 percentage points of the fixed-stride rule.</p>
+        <div class="grid-2" style="margin-top:16px;align-items:start">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr class="group"><th colspan="4">A: the stride varies</th></tr>
+                <tr><th scope="col" style="text-align:left">Policy</th><th scope="col">Ref. succ.</th><th scope="col" class="ours">Succ.</th><th scope="col" class="ours">Rate</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Flow Matching</th><td>88</td><td class="ours">90</td><td class="ours">0.63</td></tr>
+                <tr><th scope="row">π<sub>0.5</sub></th><td>97</td><td class="ours">97</td><td class="ours">0.54</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr class="group"><th colspan="6">B: the factor varies · success (%) / rate (×)</th></tr>
+                <tr><th scope="col" style="text-align:left">Policy</th><th scope="col">Factor</th><th scope="col">0.3×</th><th scope="col">0.5×</th><th scope="col">1.5×</th><th scope="col">2×</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row" rowspan="2">FM</th><td>fixed</td><td>90 / 0.40</td><td>90 / 0.63</td><td>90 / 1.22</td><td>89 / 1.35</td></tr>
+                <tr><td class="ours">varying</td><td class="ours">89 / 0.46</td><td class="ours">91 / 0.68</td><td class="ours">92 / 1.20</td><td class="ours">91 / 1.28</td></tr>
+                <tr><th scope="row" rowspan="2">π<sub>0.5</sub></th><td>fixed</td><td>97 / 0.39</td><td>98 / 0.57</td><td>97 / 1.21</td><td>97 / 1.34</td></tr>
+                <tr><td class="ours">varying</td><td class="ours">97 / 0.42</td><td class="ours">98 / 0.61</td><td class="ours">96 / 1.13</td><td class="ours">97 / 1.21</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="caption">FM is evaluated on the 10 LIBERO-90 tasks, and π<sub>0.5</sub> on all 40 LIBERO tasks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Rollouts -->
+<section class="section" id="rollouts">
+  <div class="container">
+    <div class="section-head"><h2>Real-robot rollouts</h2></div>
+    <p class="rollout-intro">Select a task and a commanded rate to compare the 1× reference, w/o CR, vanilla resampling, and FreeSpeed side by side. Select <strong>Variable</strong> to see the rate change within an episode.</p>
+    <div class="card">
+      <div class="toolbar">
+        <label for="comparison-task">Task</label>
+        <div class="select-wrap"><select id="comparison-task"><option value="tennis">Tennis in Can</option><option value="stack-cube">Stack Cube</option><option value="pour-almond">Pour Almond</option><option value="peach">Peach on Plate</option></select></div>
+        <span id="command-rate-note" class="toolbar-note">Actual execution rate varies by rollout</span>
+        <div class="playback-actions"><button id="play-all" class="text-button" disabled>Play all</button><button id="replay" class="text-button" disabled>Replay all ↻</button></div>
+      </div>
+      <div class="speed-control">
+        <div><label for="speed">Command</label><output id="speed-value">4×</output></div>
+        <div class="range"><input type="range" id="speed" min="0" max="6" step="1" value="5" aria-label="Commanded rate" aria-describedby="command-rate-note" aria-valuetext="4 times commanded rate"><div class="ticks" aria-hidden="true"><span>0.2×</span><span>0.3×</span><span>0.5×</span><span>2×</span><span>3×</span><span>4×</span><span>Variable</span></div></div>
+      </div>
+      <div class="comparison"><div id="video-grid" class="video-grid" aria-label="Reference and method comparison videos"></div><p id="comparison-note" class="comparison-note" hidden></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Analysis -->
+<section class="section" id="analysis">
+  <div class="container">
+    <div class="section-head"><h2>Analysis</h2></div>
+    <div class="stack">
+      <div class="card">
+        <span class="kicker">Observation distribution</span>
+        <h3>FreeSpeed keeps the policy in distribution</h3>
+        <p>On LIBERO-90 Task 60 with Flow Matching at 2×, FreeSpeed remains close to the 1× reference and training data, with a median distance of 1.09 times the reference median, compared with 1.79 for vanilla resampling and 1.68 for w/o CR. Under the two baselines, higher inconsistency is associated with larger subsequent distances, whereas FreeSpeed stays close to the reference across the inconsistency range.</p>
+        <figure class="fig" style="--w:800px">
+          <a href="static/images/paper/ood-2x.webp" target="_blank" rel="noopener" title="Open full-size figure"><img src="static/images/paper/ood-2x.webp" width="2400" height="674" alt="Observation distribution shift under the 2× command: FreeSpeed remains close to the 1× reference, while the baselines deviate further from the training data, particularly after chunks with high cosine inconsistency." loading="lazy" decoding="async"></a>
+          <figcaption><b>Observation distribution shift under the 2× command.</b> FreeSpeed remains close to the 1× reference in (a) and (b), while the baselines show larger deviations from the training data, particularly after executing chunks with high cosine inconsistency in (c).</figcaption>
+        </figure>
+      </div>
+      <div class="card">
+        <span class="kicker">Comparison and sensitivity</span>
+        <h3>Prior methods and the two constants</h3>
+        <figure class="fig" style="--w:800px">
+          <a href="static/images/paper/comparison-sensitivity.webp" target="_blank" rel="noopener" title="Open full-size figure"><img src="static/images/paper/comparison-sensitivity.webp" width="2400" height="641" alt="(a) Success change against realized rate for FreeSpeed, vanilla resampling, SuP, and TempoVLA. (b, c) The decay rate lambda and the factor f s swept in turn." loading="lazy" decoding="async"></a>
+          <figcaption><b>Comparison with published methods and sensitivity to the two constants.</b> (a) Success change against realized rate. (b, c) The decay rate λ and the factor <span class="m">f</span><sub>s</sub> swept in turn.</figcaption>
+        </figure>
+        <div class="grid-2" style="margin-top:18px">
+          <p>On LIBERO, FreeSpeed matches SuP and TempoVLA in success-rate change and realized rate while providing a training-free, plug-and-play solution. Vanilla resampling can achieve higher realized rates, but at the cost of a substantial reduction in success rate. Changes are reported rather than absolute success rates because evaluation settings differ.</p>
+          <p>The decay rate λ and the factor <span class="m">f</span><sub>s</sub> are varied in turn at the 2× command, with 50 rollouts per setting, showing a broad range of effective settings for both. Shading indicates settings whose success rates remain within ten percentage points of the best observed result.</p>
+        </div>
+      </div>
+      <div class="card">
+        <span class="kicker">Conclusion</span>
+        <p>FreeSpeed enables test-time execution-speed control for frozen action-chunking policies. It computes cosine inconsistency between adjacent actions within each predicted chunk and uses this signal to adapt rescaling under fixed or time-varying commands. The main limitation of FreeSpeed is that its acceleration ceiling is set by how much free motion a task contains.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BibTeX -->
+<section class="section" id="bibtex">
+  <div class="container">
+    <div class="section-head"><h2>BibTeX</h2></div>
+    <div class="bibtex">
+      <button type="button" class="copy" data-copy="bibtex-code">Copy</button>
+<pre id="bibtex-code"><code>@misc{hu2026freespeed,
+  title  = {FreeSpeed: Training-Free Speed Control
+            for Generative Policies},
+  author = {Hu, Yuxuan and Shan, Shilin and Wang, Qiheng and Yang, Jinghan
+            and Fan, Junqiao and Wan, Hao and Yang, Jianfei},
+  year   = {2026}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>MARS Lab, Nanyang Technological University · ROKAE Robotics</p>
+    <p>Page adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a>, derived from <a href="https://nerfies.github.io">Nerfies</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
