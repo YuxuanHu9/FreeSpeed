@@ -1,5 +1,5 @@
 window.FREESPEED_PROJECT = {
-  "title": "FreeSpeed: Training-Free Speed Control for Generative Policies",
+  "title": "FreeSpeed: Training-Free Speed Control for Generative Robot Policies",
   "commands": [
     0.2,
     0.3,
